@@ -278,6 +278,12 @@ export default function BloodlineGenerator() {
     return characters.map((c) => ({ code: c.code, name: c.name, outsider: c.outsider }));
   }, [characters]);
 
+  // 血統コード構造を壊す文字・将来の書き出しで事故る文字を一括除去
+  const stripInvalidCodeChars = useCallback(
+    (v) => v.replace(/[!@#_\-()+=\[\]{}<>"'`\s\\/\$%\^&\*]/g, ""),
+    []
+  );
+
   const codeIsDuplicate = useCallback(
     (code, currentId) => {
       if (!code) return false;
@@ -441,7 +447,7 @@ export default function BloodlineGenerator() {
                         onChange={(e) => updateChar(char.id, "name", e.target.value)}
                         style={{ flex: "1 1 100px", minWidth: 70, padding: "4px 7px", background: C.bgInput, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontSize: 13, outline: "none" }} />
                       <input placeholder="ID" value={char.code}
-                        onChange={(e) => updateChar(char.id, "code", e.target.value.toUpperCase())}
+                        onChange={(e) => updateChar(char.id, "code", stripInvalidCodeChars(e.target.value.toUpperCase()))}
                         style={{ width: 60, padding: "4px 7px", background: C.bgInput, border: `1px solid ${dupCode ? C.borderErr : C.border}`, borderRadius: 4, color: dupCode ? C.danger : C.accent, fontSize: 13, fontFamily: "monospace", outline: "none" }} />
                       <select value={char.gender}
                         onChange={(e) => updateChar(char.id, "gender", e.target.value)}
