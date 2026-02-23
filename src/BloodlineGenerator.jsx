@@ -34,7 +34,7 @@ function buildParentPart(parentCode, characters, visited) {
 
 function buildBloodline(charCode, characters, visited = new Set()) {
   if (!charCode || charCode.trim() === "") return "";
-  if (visited.has(charCode)) return charCode + "(!循環)";
+  if (visited.has(charCode)) return "(!循環)";
   visited.add(charCode);
 
   const char = findChar(charCode, characters);
@@ -177,9 +177,21 @@ export default function BloodlineGenerator() {
     setSearchQuery("");
   }, []);
 
-  // FIX 3: 削除時に selected からもIDを除去
+  // FIX 3: 削除時に selected からもIDを除去 + 子キャラの孤立参照をクリア
   const removeCharacter = useCallback((id) => {
-    setCharacters((prev) => prev.filter((c) => c.id !== id));
+    setCharacters((prev) => {
+      const target = prev.find((c) => c.id === id);
+      const removedCode = target?.code;
+      return prev
+        .filter((c) => c.id !== id)
+        .map((c) => {
+          if (!removedCode || !removedCode.trim()) return c;
+          let changes = {};
+          if (c.father === removedCode) changes.father = "";
+          if (c.mother === removedCode) changes.mother = "";
+          return Object.keys(changes).length > 0 ? { ...c, ...changes } : c;
+        });
+    });
     setSelected((prev) => {
       if (!prev.has(id)) return prev;
       const next = new Set(prev);
@@ -246,11 +258,15 @@ export default function BloodlineGenerator() {
 
   const deleteSelected = useCallback(() => {
     if (selected.size === 0) return;
-    setCharacters((prev) => prev.filter((c) => !selected.has(c.id)));
+    // フィルタ表示中は表示されているキャラのみ削除（非表示キャラを巻き込まない）
+    const visibleIds = new Set(filteredResults.map((r) => r.id));
+    const toDelete = new Set([...selected].filter((id) => visibleIds.has(id)));
+    if (toDelete.size === 0) return;
+    setCharacters((prev) => prev.filter((c) => !toDelete.has(c.id)));
     setSelected(new Set());
     setSelectMode(false);
     setEditingId(null);
-  }, [selected]);
+  }, [selected, filteredResults]);
 
   const exitSelectMode = useCallback(() => {
     setSelectMode(false);
@@ -275,12 +291,12 @@ export default function BloodlineGenerator() {
   }, [importText]);
 
   const parentOptions = useMemo(() => {
-    return characters.map((c) => ({ code: c.code, name: c.name, outsider: c.outsider }));
+    return characters.map((c) => ({ id: c.id, code: c.code, name: c.name, outsider: c.outsider }));
   }, [characters]);
 
-  // 血統コード構造を壊す文字・将来の書き出しで事故る文字を一括除去
+  // 血統コードに使える文字（英数字）のみ許可
   const stripInvalidCodeChars = useCallback(
-    (v) => v.replace(/[!@#_\-()+=\[\]{}<>"'`\s\\/\$%\^&\*]/g, ""),
+    (v) => v.replace(/[^A-Za-z0-9]/g, ""),
     []
   );
 
@@ -479,7 +495,7 @@ export default function BloodlineGenerator() {
                         style={{ flex: "1 1 90px", minWidth: 70, padding: "4px 3px", background: C.bgInput, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontSize: 12, outline: "none" }}>
                         <option value="">なし</option>
                         {parentOptions.filter((p) => p.code !== char.code && p.code).map((p) => (
-                          <option key={p.code} value={p.code}>
+                          <option key={p.id} value={p.code}>
                             {p.name} ({p.code}){p.outsider ? " ⊕" : ""}
                           </option>
                         ))}
@@ -490,7 +506,7 @@ export default function BloodlineGenerator() {
                         style={{ flex: "1 1 90px", minWidth: 70, padding: "4px 3px", background: C.bgInput, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontSize: 12, outline: "none" }}>
                         <option value="">なし</option>
                         {parentOptions.filter((p) => p.code !== char.code && p.code).map((p) => (
-                          <option key={p.code} value={p.code}>
+                          <option key={p.id} value={p.code}>
                             {p.name} ({p.code}){p.outsider ? " ⊕" : ""}
                           </option>
                         ))}
@@ -501,10 +517,10 @@ export default function BloodlineGenerator() {
                         → {char.fullCode}
                       </code>
                       <div style={{ display: "flex", gap: 4 }}>
-                        <button onClick={() => moveChar(char.id, -1)}
-                          style={{ padding: "3px 8px", background: C.bgBtn, border: `1px solid ${C.border}`, borderRadius: 3, color: C.textSub, fontSize: 11, cursor: "pointer" }}>↑</button>
-                        <button onClick={() => moveChar(char.id, 1)}
-                          style={{ padding: "3px 8px", background: C.bgBtn, border: `1px solid ${C.border}`, borderRadius: 3, color: C.textSub, fontSize: 11, cursor: "pointer" }}>↓</button>
+                        <button onClick={() => moveChar(char.id, -1)} disabled={!!searchQuery.trim()}
+                          style={{ padding: "3px 8px", background: C.bgBtn, border: `1px solid ${C.border}`, borderRadius: 3, color: searchQuery.trim() ? C.textLight : C.textSub, fontSize: 11, cursor: searchQuery.trim() ? "default" : "pointer" }}>↑</button>
+                        <button onClick={() => moveChar(char.id, 1)} disabled={!!searchQuery.trim()}
+                          style={{ padding: "3px 8px", background: C.bgBtn, border: `1px solid ${C.border}`, borderRadius: 3, color: searchQuery.trim() ? C.textLight : C.textSub, fontSize: 11, cursor: searchQuery.trim() ? "default" : "pointer" }}>↓</button>
                         <button onClick={() => duplicateCharacter(char.id)}
                           style={{ padding: "3px 8px", background: C.bgBtn, border: `1px solid ${C.border}`, borderRadius: 3, color: C.textSub, fontSize: 11, cursor: "pointer" }}>複製</button>
                         <button onClick={() => setEditingId(null)}
@@ -525,6 +541,7 @@ export default function BloodlineGenerator() {
                       {selectMode && (
                         <input type="checkbox" checked={selected.has(char.id)}
                           onChange={() => toggleSelect(char.id)}
+                          onClick={(e) => e.stopPropagation()}
                           style={{ accentColor: C.danger, width: 14, height: 14, cursor: "pointer", flexShrink: 0 }} />
                       )}
                       <span style={{ fontSize: 13, fontWeight: 600, color: C.text, whiteSpace: "nowrap" }}>
