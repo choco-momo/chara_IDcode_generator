@@ -321,7 +321,7 @@ export default function BloodlineGenerator() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
             <div>
               <h1 style={{ margin: 0, fontSize: 20, color: C.accent, letterSpacing: 1 }}>
-                血統コード・ジェネレーター
+                血統コード・ジェネレーター <span style={{ fontSize: 11, color: C.textMuted, fontWeight: 400 }}>2026-02-23-22:05</span>
               </h1>
               <p style={{ margin: "2px 0 0", fontSize: 12, color: C.textMuted }}>
                 ID変更で全血統コード自動再計算 ｜ 外部者は＋表記
