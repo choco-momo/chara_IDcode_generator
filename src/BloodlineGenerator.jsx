@@ -116,6 +116,8 @@ export default function BloodlineGenerator() {
   const [showHelp, setShowHelp] = useState(false);
   const [selectMode, setSelectMode] = useState(false);
   const [selected, setSelected] = useState(new Set());
+  const [showImport, setShowImport] = useState(false);
+  const [importText, setImportText] = useState("");
 
   const results = useMemo(() => {
     return characters.map((char) => ({
@@ -254,6 +256,23 @@ export default function BloodlineGenerator() {
     setSelected(new Set());
   }, []);
 
+  const importNames = useCallback(() => {
+    const names = importText.split("\n").map((s) => s.trim()).filter((s) => s.length > 0);
+    if (names.length === 0) return;
+    const newChars = names.map((name) => ({
+      id: crypto.randomUUID(),
+      name,
+      code: "",
+      gender: "M",
+      father: "",
+      mother: "",
+      outsider: false,
+    }));
+    setCharacters((prev) => [...prev, ...newChars]);
+    setImportText("");
+    setShowImport(false);
+  }, [importText]);
+
   const parentOptions = useMemo(() => {
     return characters.map((c) => ({ code: c.code, name: c.name, outsider: c.outsider }));
   }, [characters]);
@@ -304,6 +323,10 @@ export default function BloodlineGenerator() {
                   キャンセル
                 </button>
               )}
+              <button onClick={() => setShowImport(!showImport)}
+                style={{ background: showImport ? C.accentLight : C.bgBtn, border: `1px solid ${showImport ? C.accentLight : C.border}`, color: showImport ? "#fff" : C.accent, padding: "5px 12px", borderRadius: 5, cursor: "pointer", fontSize: 12, transition: "all 0.2s" }}>
+                一括読込
+              </button>
               <button onClick={addCharacter}
                 style={{ background: C.bgBtn, border: `1px solid ${C.border}`, color: C.accent, padding: "5px 12px", borderRadius: 5, cursor: "pointer", fontSize: 12 }}>
                 ＋追加
@@ -325,6 +348,37 @@ export default function BloodlineGenerator() {
               <strong style={{ color: C.accent, marginTop: 6, display: "inline-block" }}>例</strong><br />
               <code style={{ color: C.accentCode }}>I1_F(H1(C1D1(A1B1))+J1)</code><br />
               → I1の母H1は血族、父J1は外部者なので+J1
+            </div>
+          )}
+
+          {showImport && (
+            <div style={{ marginTop: 10, background: C.bgHelp, border: `1px solid ${C.accent}`, borderRadius: 6, padding: 12 }}>
+              <div style={{ fontSize: 12, color: C.textSub, marginBottom: 6 }}>
+                キャラ名を1行ずつ入力（まとめて貼り付けOK）
+              </div>
+              <textarea
+                value={importText}
+                onChange={(e) => setImportText(e.target.value)}
+                placeholder={"カロン\nルクロ\nエイル\nアシュリー"}
+                rows={6}
+                style={{ width: "100%", padding: "8px 10px", background: C.bgInput, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontSize: 13, fontFamily: "'Segoe UI', 'Hiragino Sans', sans-serif", outline: "none", resize: "vertical", boxSizing: "border-box" }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+                <span style={{ fontSize: 11, color: C.textMuted }}>
+                  {importText.split("\n").filter((s) => s.trim()).length}名
+                </span>
+                <div style={{ display: "flex", gap: 6 }}>
+                  <button onClick={() => { setShowImport(false); setImportText(""); }}
+                    style={{ background: C.bgBtn, border: `1px solid ${C.border}`, color: C.textSub, padding: "5px 14px", borderRadius: 4, cursor: "pointer", fontSize: 12 }}>
+                    閉じる
+                  </button>
+                  <button onClick={importNames}
+                    disabled={importText.split("\n").filter((s) => s.trim()).length === 0}
+                    style={{ background: C.btnPrimary, border: "none", color: C.btnPrimaryText, padding: "5px 14px", borderRadius: 4, cursor: "pointer", fontSize: 12, opacity: importText.split("\n").filter((s) => s.trim()).length === 0 ? 0.5 : 1 }}>
+                    読み込み
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
