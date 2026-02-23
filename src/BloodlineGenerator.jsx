@@ -146,8 +146,9 @@ export default function BloodlineGenerator() {
 
       const oldCode = target.code;
 
-      // code以外の変更、またはコードが変わっていない場合は単純更新
-      if (field !== "code" || oldCode === value) {
+      // code以外の変更、コードが変わっていない場合、旧コードが空の場合は単純更新
+      // 旧コードが空だとfather/mother=""の全キャラが巻き込まれるためカスケードしない
+      if (field !== "code" || oldCode === value || !oldCode.trim()) {
         return prev.map((c) => (c.id === id ? { ...c, [field]: value } : c));
       }
 
