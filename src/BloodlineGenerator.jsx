@@ -401,16 +401,23 @@ export default function BloodlineGenerator() {
         </div>
 
         {selectMode && (
-          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8, padding: "8px 12px", background: C.bgSelBar, border: `1px solid ${C.dangerBorder}`, borderRadius: 6 }}>
-            <span style={{ fontSize: 12, color: C.dangerText }}>
-              {selected.size}件選択中
-            </span>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8, padding: "8px 12px", background: C.bgSelBar, border: `1px solid ${C.dangerBorder}`, borderRadius: 6, flexWrap: "wrap" }}>
+            {selected.size === 0 ? (
+              <span style={{ fontSize: 12, color: C.textMuted }}>
+                タップで個別選択
+              </span>
+            ) : (
+              <span style={{ fontSize: 12, color: C.dangerText, fontWeight: 600 }}>
+                {selected.size}件選択中
+              </span>
+            )}
             <button onClick={selectAll}
               style={{ background: "transparent", border: `1px solid ${C.border}`, color: C.textSub, padding: "3px 10px", borderRadius: 4, cursor: "pointer", fontSize: 11 }}>
               全選択
             </button>
             <button onClick={selectNone}
-              style={{ background: "transparent", border: `1px solid ${C.border}`, color: C.textSub, padding: "3px 10px", borderRadius: 4, cursor: "pointer", fontSize: 11 }}>
+              disabled={selected.size === 0}
+              style={{ background: "transparent", border: `1px solid ${C.border}`, color: selected.size > 0 ? C.textSub : C.textLight, padding: "3px 10px", borderRadius: 4, cursor: selected.size > 0 ? "pointer" : "default", fontSize: 11 }}>
               全解除
             </button>
             <div style={{ flex: 1 }} />
@@ -422,7 +429,7 @@ export default function BloodlineGenerator() {
                 color: selected.size > 0 ? C.danger : C.textLight,
                 padding: "4px 14px", borderRadius: 4, cursor: selected.size > 0 ? "pointer" : "default", fontSize: 12,
               }}>
-              {selected.size}件削除
+              {selected.size > 0 ? `${selected.size}件削除` : "削除"}
             </button>
           </div>
         )}
