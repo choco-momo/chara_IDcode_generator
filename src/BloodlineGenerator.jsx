@@ -9,7 +9,7 @@ const initialCharacters = [
   { id: "6", name: "ノルン", code: "I3", gender: "N→F", father: "L1", mother: "C1", outsider: false },
   { id: "7", name: "セレスティーヌ", code: "D1", gender: "F", father: "I1", mother: "E1", outsider: false },
   { id: "8", name: "ディアン", code: "D2", gender: "M", father: "I1", mother: "E1", outsider: false },
-  { id: "9", name: "アルグレーン", code: "A1", gender: "F", father: "", mother: "", outsider: true },
+  { id: "9", name: "アルグレーン", code: "A1", gender: "M", father: "", mother: "", outsider: true },
   { id: "10", name: "ミュリエル", code: "O1", gender: "F", father: "A1", mother: "D1", outsider: false },
   { id: "11", name: "オスカー", code: "O2", gender: "M", father: "A1", mother: "D1", outsider: false },
   { id: "12", name: "スルト", code: "S1", gender: "M", father: "", mother: "", outsider: true },
