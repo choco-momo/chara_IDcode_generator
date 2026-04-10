@@ -471,7 +471,7 @@ export default function BloodlineGenerator() {
                         style={{ flex: "1 1 100px", minWidth: 70, padding: "4px 7px", background: C.bgInput, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontSize: 13, outline: "none" }} />
                       <input placeholder="ID" value={char.code}
                         onChange={(e) => updateChar(char.id, "code", stripInvalidCodeChars(e.target.value))}
-                        style={{ width: 60, padding: "4px 7px", background: C.bgInput, border: `1px solid ${dupCode ? C.borderErr : C.border}`, borderRadius: 4, color: dupCode ? C.danger : C.accent, fontSize: 13, fontFamily: "monospace", outline: "none" }} />
+                        style={{ width: 60, padding: "4px 7px", background: C.bgInput, border: `1px solid ${dupCode ? C.borderErr : C.border}`, borderRadius: 4, color: dupCode ? C.danger : C.accent, fontSize: 13, fontFamily: '"Consolas", "Menlo", "Monaco", monospace', outline: "none" }} />
                       <select value={char.gender}
                         onChange={(e) => updateChar(char.id, "gender", e.target.value)}
                         style={{ width: 64, padding: "4px 3px", background: C.bgInput, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontSize: 12, outline: "none" }}>
@@ -564,7 +564,7 @@ export default function BloodlineGenerator() {
                       onClick={(e) => { e.stopPropagation(); copySingle(`${char.name}：${char.fullCode}`); }}
                       title="クリックでコピー"
                       style={{
-                        fontFamily: "monospace", fontSize: 11, color: C.accentCode,
+                        fontFamily: '"Consolas", "Menlo", "Monaco", monospace', fontSize: 11, color: C.accentCode,
                         textAlign: "right", wordBreak: "break-all", lineHeight: 1.3,
                         cursor: "copy", padding: "2px 4px", borderRadius: 3,
                       }}>
@@ -586,7 +586,7 @@ export default function BloodlineGenerator() {
             </button>
           </div>
           <pre style={{
-            margin: 0, fontFamily: "monospace", fontSize: 11,
+            margin: 0, fontFamily: '"Consolas", "Menlo", "Monaco", monospace', fontSize: 11,
             lineHeight: 1.8, color: C.text, whiteSpace: "pre-wrap", wordBreak: "break-all",
           }}>
             {results.map((r) => `${r.name}：${r.fullCode}`).join("\n")}
