@@ -18,7 +18,7 @@ const initialCharacters = [
   { id: "15", name: "ルーグ", code: "J1", gender: "M", father: "K2", mother: "O1", outsider: false },
   { id: "16", name: "シンシア", code: "J2", gender: "F", father: "K2", mother: "O1", outsider: false },
   { id: "17", name: "ナール", code: "V1", gender: "M", father: "", mother: "", outsider: true },
-  { id: "18", name: "レフィル", code: "R1", gender: "F", father: "O2", mother: "", outsider: false },
+  { id: "18", name: "レフィル", code: "R1", gender: "F", father: "O2", mother: "I3", outsider: false },
   { id: "19", name: "ナハル", code: "H1", gender: "M", father: "V1", mother: "R1", outsider: false },
   { id: "20", name: "アシェラ", code: "H2", gender: "F", father: "V1", mother: "R1", outsider: false },
   { id: "21", name: "リリー", code: "X1", gender: "F", father: "", mother: "", outsider: true },
