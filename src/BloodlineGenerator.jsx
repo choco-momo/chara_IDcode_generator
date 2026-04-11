@@ -1,28 +1,28 @@
 import { useState, useMemo, useCallback } from "react";
 
 const initialCharacters = [
-  { id: "1", name: "カロン", code: "C1", gender: "F", father: "", mother: "", outsider: false },
-  { id: "2", name: "ルクロ", code: "L1", gender: "M", father: "", mother: "", outsider: false },
-  { id: "3", name: "エイル", code: "E1", gender: "F", father: "", mother: "", outsider: true },
-  { id: "4", name: "アシュリー", code: "I1", gender: "M", father: "L1", mother: "C1", outsider: false },
-  { id: "5", name: "イーリス", code: "I2", gender: "F", father: "L1", mother: "C1", outsider: false },
-  { id: "6", name: "ノルン", code: "I3", gender: "N→F", father: "L1", mother: "C1", outsider: false },
-  { id: "7", name: "セレスティーヌ", code: "D1", gender: "F", father: "I1", mother: "E1", outsider: false },
-  { id: "8", name: "ディアン", code: "D2", gender: "M", father: "I1", mother: "E1", outsider: false },
-  { id: "9", name: "アルグレーン", code: "A1", gender: "M", father: "", mother: "", outsider: true },
-  { id: "10", name: "ミュリエル", code: "O1", gender: "F", father: "A1", mother: "D1", outsider: false },
-  { id: "11", name: "オスカー", code: "O2", gender: "M", father: "A1", mother: "D1", outsider: false },
-  { id: "12", name: "スルト", code: "S1", gender: "M", father: "", mother: "", outsider: true },
-  { id: "13", name: "アステリア", code: "K1", gender: "F", father: "S1", mother: "I2", outsider: false },
-  { id: "14", name: "クロム", code: "K2", gender: "M", father: "S1", mother: "I2", outsider: false },
-  { id: "15", name: "ルーグ", code: "J1", gender: "M", father: "K2", mother: "O1", outsider: false },
-  { id: "16", name: "シンシア", code: "J2", gender: "F", father: "K2", mother: "O1", outsider: false },
-  { id: "17", name: "ナール", code: "V1", gender: "M", father: "", mother: "", outsider: true },
-  { id: "18", name: "レフィル", code: "R1", gender: "F", father: "O2", mother: "I3", outsider: false },
-  { id: "19", name: "ナハル", code: "H1", gender: "M", father: "V1", mother: "R1", outsider: false },
-  { id: "20", name: "アシェラ", code: "H2", gender: "F", father: "V1", mother: "R1", outsider: false },
-  { id: "21", name: "リリー", code: "X1", gender: "F", father: "", mother: "", outsider: true },
-  { id: "22", name: "ライラ", code: "Z1", gender: "F", father: "", mother: "", outsider: true },
+  { id: "1",  name: "カロン",          code: "C1", gender: "F",    father: "",   mother: "",   outsider: false, pairId: "01", pairRole: "F", deceased: false },
+  { id: "2",  name: "ルクロ",          code: "L1", gender: "M",    father: "",   mother: "",   outsider: false, pairId: "01", pairRole: "M", deceased: false },
+  { id: "3",  name: "エイル",          code: "E1", gender: "F",    father: "",   mother: "",   outsider: true,  pairId: "02", pairRole: "F", deceased: false },
+  { id: "4",  name: "アシュリー",      code: "I1", gender: "M",    father: "L1", mother: "C1", outsider: false, pairId: "02", pairRole: "M", deceased: false },
+  { id: "5",  name: "イーリス",        code: "I2", gender: "F",    father: "L1", mother: "C1", outsider: false, pairId: "03", pairRole: "F", deceased: false },
+  { id: "6",  name: "ノルン",          code: "I3", gender: "N→F",  father: "L1", mother: "C1", outsider: false, pairId: "07", pairRole: "F", deceased: false },
+  { id: "7",  name: "セレスティーヌ",  code: "D1", gender: "F",    father: "I1", mother: "E1", outsider: false, pairId: "04", pairRole: "F", deceased: false },
+  { id: "8",  name: "ディアン",        code: "D2", gender: "M",    father: "I1", mother: "E1", outsider: false, pairId: "05", pairRole: "M", deceased: false },
+  { id: "9",  name: "アルグレーン",    code: "A1", gender: "M",    father: "",   mother: "",   outsider: true,  pairId: "04", pairRole: "M", deceased: false },
+  { id: "10", name: "ミュリエル",      code: "O1", gender: "F",    father: "A1", mother: "D1", outsider: false, pairId: "06", pairRole: "F", deceased: false },
+  { id: "11", name: "オスカー",        code: "O2", gender: "M",    father: "A1", mother: "D1", outsider: false, pairId: "07", pairRole: "M", deceased: false },
+  { id: "12", name: "スルト",          code: "S1", gender: "M",    father: "",   mother: "",   outsider: true,  pairId: "03", pairRole: "M", deceased: false },
+  { id: "13", name: "アステリア",      code: "K1", gender: "F",    father: "S1", mother: "I2", outsider: false, pairId: "05", pairRole: "F", deceased: false },
+  { id: "14", name: "クロム",          code: "K2", gender: "M",    father: "S1", mother: "I2", outsider: false, pairId: "06", pairRole: "M", deceased: false },
+  { id: "15", name: "ルーグ",          code: "J1", gender: "M",    father: "K2", mother: "O1", outsider: false, pairId: "",   pairRole: "",  deceased: false },
+  { id: "16", name: "シンシア",        code: "J2", gender: "F",    father: "K2", mother: "O1", outsider: false, pairId: "08", pairRole: "F", deceased: false },
+  { id: "17", name: "ナール",          code: "V1", gender: "M",    father: "",   mother: "",   outsider: true,  pairId: "09", pairRole: "M", deceased: false },
+  { id: "18", name: "レフィル",        code: "R1", gender: "F",    father: "O2", mother: "I3", outsider: false, pairId: "09", pairRole: "F", deceased: false },
+  { id: "19", name: "ナハル",          code: "H1", gender: "M",    father: "V1", mother: "R1", outsider: false, pairId: "",   pairRole: "",  deceased: false },
+  { id: "20", name: "アシェラ",        code: "H2", gender: "F",    father: "V1", mother: "R1", outsider: false, pairId: "10", pairRole: "F", deceased: false },
+  { id: "21", name: "リリー",          code: "X1", gender: "F",    father: "",   mother: "",   outsider: true,  pairId: "98", pairRole: "F", deceased: false },
+  { id: "22", name: "ライラ",          code: "Z1", gender: "F",    father: "",   mother: "",   outsider: true,  pairId: "99", pairRole: "F", deceased: true },
 ];
 
 function findChar(code, characters) {
@@ -112,6 +112,10 @@ const C = {
   successBg:  "#F0FFF0",
   btnPrimary: "#0A6B5C",
   btnPrimaryText: "#FFFFFF",
+  pairBg:       "#F5F0FF",
+  pairText:     "#7755AA",
+  deceasedBg:   "#F5F0F0",
+  deceasedText: "#AA5555",
 };
 
 export default function BloodlineGenerator() {
@@ -124,6 +128,7 @@ export default function BloodlineGenerator() {
   const [selected, setSelected] = useState(new Set());
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState("");
+  const [outputMode, setOutputMode] = useState("nest");
 
   const results = useMemo(() => {
     return characters.map((char) => ({
@@ -140,7 +145,8 @@ export default function BloodlineGenerator() {
         r.id === editingId ||
         r.name.toLowerCase().includes(q) ||
         r.code.toLowerCase().includes(q) ||
-        r.fullCode.toLowerCase().includes(q)
+        r.fullCode.toLowerCase().includes(q) ||
+        (r.pairId || "").includes(q)
     );
   }, [results, searchQuery, editingId]);
 
@@ -150,25 +156,41 @@ export default function BloodlineGenerator() {
       const target = prev.find((c) => c.id === id);
       if (!target) return prev;
 
+      // --- 既存: code カスケード更新 ---
       const oldCode = target.code;
-
-      // code以外の変更、コードが変わっていない場合、旧コードが空の場合は単純更新
-      // 旧コードが空だとfather/mother=""の全キャラが巻き込まれるためカスケードしない
-      if (field !== "code" || oldCode === value || !oldCode.trim()) {
-        return prev.map((c) => (c.id === id ? { ...c, [field]: value } : c));
+      if (field === "code" && oldCode !== value && oldCode.trim()) {
+        return prev.map((c) => {
+          if (c.id === id) return { ...c, [field]: value };
+          let needsUpdate = false;
+          const changes = {};
+          if (c.father === oldCode) { changes.father = value; needsUpdate = true; }
+          if (c.mother === oldCode) { changes.mother = value; needsUpdate = true; }
+          return needsUpdate ? { ...c, ...changes } : c;
+        });
       }
 
-      // codeが変更された場合、子キャラの father/mother も新コードに書き換え
-      return prev.map((c) => {
-        if (c.id === id) {
-          return { ...c, [field]: value };
+      // --- 追加: pairId を空にしたら pairRole も連動クリア ---
+      if (field === "pairId" && (!value || value.trim() === "")) {
+        return prev.map((c) =>
+          c.id === id ? { ...c, pairId: "", pairRole: "" } : c
+        );
+      }
+
+      // --- 追加: pairId 入力時に pairRole 自動補助 ---
+      if (field === "pairId" && value && value.trim() !== "") {
+        const currentRole = target.pairRole;
+        if (!currentRole) {
+          let autoRole = "";
+          if (target.gender === "F" || target.gender === "N→F") autoRole = "F";
+          else if (target.gender === "M" || target.gender === "N→M") autoRole = "M";
+          return prev.map((c) =>
+            c.id === id ? { ...c, pairId: value, pairRole: autoRole || currentRole } : c
+          );
         }
-        let needsUpdate = false;
-        const changes = {};
-        if (c.father === oldCode) { changes.father = value; needsUpdate = true; }
-        if (c.mother === oldCode) { changes.mother = value; needsUpdate = true; }
-        return needsUpdate ? { ...c, ...changes } : c;
-      });
+      }
+
+      // --- デフォルト: 単純更新 ---
+      return prev.map((c) => (c.id === id ? { ...c, [field]: value } : c));
     });
   }, []);
 
@@ -177,7 +199,7 @@ export default function BloodlineGenerator() {
     const newId = crypto.randomUUID();
     setCharacters((prev) => [
       ...prev,
-      { id: newId, name: "", code: "", gender: "M", father: "", mother: "", outsider: false },
+      { id: newId, name: "", code: "", gender: "M", father: "", mother: "", outsider: false, pairId: "", pairRole: "", deceased: false },
     ]);
     setEditingId(newId);
     setSearchQuery("");
@@ -212,7 +234,7 @@ export default function BloodlineGenerator() {
       const src = prev.find((c) => c.id === id);
       if (!src) return prev;
       const idx = prev.findIndex((c) => c.id === id);
-      const dup = { ...src, id: newId, name: src.name + "(複)", code: "" };
+      const dup = { ...src, id: newId, name: src.name + "(複)", code: "", pairId: "", pairRole: "", deceased: false };
       const next = [...prev];
       next.splice(idx + 1, 0, dup);
       return next;
@@ -232,17 +254,124 @@ export default function BloodlineGenerator() {
     });
   }, []);
 
+  // ‡ペアID関連の算出値
+  const pairList = useMemo(() => {
+    const pairMap = {};
+    characters.forEach((c) => {
+      if (!c.pairId || c.pairId.trim() === "") return;
+      const symbol = c.deceased ? "†" : "‡";
+      const key = `${symbol}${c.pairId}`;
+      if (!pairMap[key]) pairMap[key] = { symbol, pairId: c.pairId, members: [] };
+      pairMap[key].members.push(c);
+    });
+    const result = Object.values(pairMap).map((group) => ({
+      ...group,
+      f: group.members.find((m) => m.pairRole === "F") || null,
+      m: group.members.find((m) => m.pairRole === "M") || null,
+    }));
+    result.sort((a, b) => {
+      if (a.symbol !== b.symbol) return a.symbol === "‡" ? -1 : 1;
+      return a.pairId.localeCompare(b.pairId);
+    });
+    return result;
+  }, [characters]);
+
+  const pairErrors = useMemo(() => {
+    const errors = [];
+    const pairGroups = {};
+    characters.forEach((c) => {
+      if (!c.pairId || c.pairId.trim() === "") return;
+      const sym = c.deceased ? "†" : "‡";
+      const key = `${sym}${c.pairId}`;
+      if (!pairGroups[key]) pairGroups[key] = [];
+      pairGroups[key].push(c);
+    });
+    Object.entries(pairGroups).forEach(([key, members]) => {
+      if (members.length > 2) {
+        errors.push({ pairKey: key, message: `${members.length}人が同じペアIDを持っています` });
+      }
+      if (members.length === 2 && members[0].pairRole === members[1].pairRole) {
+        errors.push({ pairKey: key, message: `pairRoleが同じです（${members[0].pairRole}同士）` });
+      }
+      const emptyRole = members.filter((m) => !m.pairRole);
+      if (emptyRole.length > 0) {
+        errors.push({ pairKey: key, message: `pairRoleが未設定のメンバーがいます` });
+      }
+      if (members.some((m) => m.pairId === "00")) {
+        errors.push({ pairKey: key, message: `"00"は使用できません` });
+      }
+    });
+    return errors;
+  }, [characters]);
+
+  const pairCount = useMemo(() => {
+    const ids = new Set();
+    characters.forEach((c) => {
+      if (c.pairId && c.pairId.trim() !== "" && !c.deceased) {
+        ids.add(c.pairId);
+      }
+    });
+    return ids.size;
+  }, [characters]);
+
+  const pairOutputText = useMemo(() => {
+    if (outputMode !== "pair") return "";
+
+    // ブロック1: 夫婦ID定義
+    let block1 = "=== 夫婦ID定義 ===\n";
+    pairList.forEach((p) => {
+      const fPart = p.f
+        ? `${p.f.name}(${p.f.code}_${p.f.gender})`
+        : "(未定)";
+      const mPart = p.m
+        ? `${p.m.name}(${p.m.code}_${p.m.gender})`
+        : "(未定)";
+      block1 += `${p.symbol}${p.pairId}: ${fPart} + ${mPart}\n`;
+    });
+
+    // ブロック2: キャラ一覧（全キャラ出力）
+    let block2 = "\n";
+    results.forEach((r) => {
+      const base = `${r.name}：${r.code}_${r.gender}`;
+      const mother = r.mother ? characters.find((c) => c.code === r.mother) : null;
+      const father = r.father ? characters.find((c) => c.code === r.father) : null;
+      const parentChar = (mother && mother.pairId) ? mother : (father && father.pairId) ? father : null;
+      let parentRef = "";
+      if (parentChar && parentChar.pairId) {
+        const sym = parentChar.deceased ? "†" : "‡";
+        parentRef = ` (${sym}${parentChar.pairId})`;
+      }
+      block2 += `${base}${parentRef}\n`;
+    });
+
+    return block1 + block2;
+  }, [outputMode, pairList, results, characters]);
+
   const copyAll = useCallback(() => {
-    const text = results.map((r) => `${r.name}：${r.fullCode}`).join("\n");
+    const text = outputMode === "pair"
+      ? pairOutputText
+      : results.map((r) => `${r.name}：${r.fullCode}`).join("\n");
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
-  }, [results]);
+  }, [results, outputMode, pairOutputText]);
 
-  const copySingle = useCallback((text) => {
+  const copySingle = useCallback((char) => {
+    let text;
+    if (outputMode === "pair") {
+      const mother = char.mother ? characters.find((c) => c.code === char.mother) : null;
+      const father = char.father ? characters.find((c) => c.code === char.father) : null;
+      const parentChar = (mother && mother.pairId) ? mother : (father && father.pairId) ? father : null;
+      const parentRef = parentChar && parentChar.pairId
+        ? ` (${parentChar.deceased ? "†" : "‡"}${parentChar.pairId})`
+        : "";
+      text = `${char.name}：${char.code}_${char.gender}${parentRef}`;
+    } else {
+      text = `${char.name}：${char.fullCode}`;
+    }
     navigator.clipboard.writeText(text);
-  }, []);
+  }, [outputMode, characters]);
 
   const toggleSelect = useCallback((id) => {
     setSelected((prev) => {
@@ -268,7 +397,19 @@ export default function BloodlineGenerator() {
     const visibleIds = new Set(filteredResults.map((r) => r.id));
     const toDelete = new Set([...selected].filter((id) => visibleIds.has(id)));
     if (toDelete.size === 0) return;
-    setCharacters((prev) => prev.filter((c) => !toDelete.has(c.id)));
+    setCharacters((prev) => {
+      const removedCodes = new Set(
+        prev.filter((c) => toDelete.has(c.id) && c.code.trim()).map((c) => c.code)
+      );
+      return prev
+        .filter((c) => !toDelete.has(c.id))
+        .map((c) => {
+          let changes = {};
+          if (removedCodes.has(c.father)) changes.father = "";
+          if (removedCodes.has(c.mother)) changes.mother = "";
+          return Object.keys(changes).length > 0 ? { ...c, ...changes } : c;
+        });
+    });
     setSelected(new Set());
     setSelectMode(false);
     setEditingId(null);
@@ -290,6 +431,9 @@ export default function BloodlineGenerator() {
       father: "",
       mother: "",
       outsider: false,
+      pairId: "",
+      pairRole: "",
+      deceased: false,
     }));
     setCharacters((prev) => [...prev, ...newChars]);
     setImportText("");
@@ -305,6 +449,12 @@ export default function BloodlineGenerator() {
     (v) => v.replace(/[!@#_\-()+=\[\]{}<>"'`\s\\/\$%\^&\*]/g, ""),
     []
   );
+
+  const normalizePairId = useCallback((value) => {
+    const digits = value.replace(/\D/g, "").slice(0, 2);
+    if (!digits) return "";
+    return digits.padStart(2, "0");
+  }, []);
 
   const codeIsDuplicate = useCallback(
     (code, currentId) => {
@@ -335,7 +485,7 @@ export default function BloodlineGenerator() {
             </div>
             <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
               <span style={{ fontSize: 11, color: C.textMuted }}>
-                {stats.total}名（血族{stats.blooded} / 外部{stats.outsiders}）
+                {stats.total}名（血族{stats.blooded} / 外部{stats.outsiders}）/ ‡{pairCount}組
               </span>
               <button onClick={() => setShowHelp(!showHelp)}
                 style={{ background: C.bgBtn, border: `1px solid ${C.border}`, color: C.textSub, padding: "4px 10px", borderRadius: 5, cursor: "pointer", fontSize: 12 }}>
@@ -415,7 +565,7 @@ export default function BloodlineGenerator() {
         <div style={{ marginBottom: 12 }}>
           <input
             type="text"
-            placeholder="検索（名前・ID・コード）..."
+            placeholder="検索（名前・ID・コード・ペアID）..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{ width: "100%", maxWidth: 280, padding: "5px 10px", background: C.bgInput, border: `1px solid ${C.border}`, borderRadius: 5, color: C.text, fontSize: 12, outline: "none", boxSizing: "border-box" }}
@@ -493,6 +643,25 @@ export default function BloodlineGenerator() {
                           style={{ accentColor: C.outsider, width: 12, height: 12 }} />
                         外部
                       </label>
+                      <span style={{ fontSize: 11, color: C.pairText, marginLeft: 2 }}>‡/†</span>
+                      <input placeholder="‡" value={char.pairId}
+                        onChange={(e) => updateChar(char.id, "pairId", e.target.value.replace(/\D/g, "").slice(0, 2))}
+                        onBlur={(e) => updateChar(char.id, "pairId", normalizePairId(e.target.value))}
+                        style={{ width: 44, padding: "4px 5px", background: C.bgInput, border: `1px solid ${char.pairId === "00" ? C.borderErr : C.border}`, borderRadius: 4, color: char.pairId === "00" ? C.danger : C.pairText, fontSize: 12, fontFamily: '"Consolas", "Menlo", "Monaco", monospace', outline: "none", textAlign: "center" }} />
+                      <select value={char.pairRole}
+                        onChange={(e) => updateChar(char.id, "pairRole", e.target.value)}
+                        disabled={!char.pairId}
+                        style={{ width: 50, padding: "4px 3px", background: C.bgInput, border: `1px solid ${char.pairId && !char.pairRole ? C.borderErr : C.border}`, borderRadius: 4, color: C.text, fontSize: 12, outline: "none", opacity: char.pairId ? 1 : 0.5 }}>
+                        <option value="">-</option>
+                        <option value="F">F</option>
+                        <option value="M">M</option>
+                      </select>
+                      <label style={{ display: "flex", alignItems: "center", gap: 4, cursor: "pointer", fontSize: 11, color: char.deceased ? C.deceasedText : C.textMuted, padding: "3px 8px", background: char.deceased ? C.deceasedBg : "transparent", border: `1px solid ${char.deceased ? C.deceasedText : C.border}`, borderRadius: 4 }}>
+                        <input type="checkbox" checked={char.deceased}
+                          onChange={(e) => updateChar(char.id, "deceased", e.target.checked)}
+                          style={{ accentColor: C.deceasedText, width: 12, height: 12 }} />
+                        †
+                      </label>
                     </div>
                     <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
                       <label style={{ fontSize: 11, color: C.textSub, minWidth: 20 }}>母</label>
@@ -565,9 +734,20 @@ export default function BloodlineGenerator() {
                           外部
                         </span>
                       )}
+                      {char.pairId && (
+                        <span style={{
+                          fontSize: 10, padding: "1px 5px", borderRadius: 3,
+                          background: char.deceased ? C.deceasedBg : C.pairBg,
+                          color: char.deceased ? C.deceasedText : C.pairText,
+                          whiteSpace: "nowrap",
+                          fontFamily: '"Consolas", "Menlo", monospace',
+                        }}>
+                          {char.deceased ? "†" : "‡"}{char.pairId}{char.pairRole}
+                        </span>
+                      )}
                     </div>
                     <div
-                      onClick={(e) => { e.stopPropagation(); copySingle(`${char.name}：${char.fullCode}`); }}
+                      onClick={(e) => { e.stopPropagation(); copySingle(char); }}
                       title="クリックでコピー"
                       style={{
                         fontFamily: '"Consolas", "Menlo", "Monaco", monospace', fontSize: 11, color: C.accentCode,
@@ -584,18 +764,47 @@ export default function BloodlineGenerator() {
         </div>
 
         <div style={{ marginTop: 20, background: C.bgPreview, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: 14 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-            <h3 style={{ margin: 0, fontSize: 13, color: C.textMuted }}>出力プレビュー</h3>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, flexWrap: "wrap", gap: 6 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <h3 style={{ margin: 0, fontSize: 13, color: C.textMuted }}>出力プレビュー</h3>
+              <button onClick={() => setOutputMode("nest")}
+                style={{
+                  padding: "3px 10px", borderRadius: 4, fontSize: 11, cursor: "pointer",
+                  background: outputMode === "nest" ? C.btnPrimary : C.bgBtn,
+                  color: outputMode === "nest" ? C.btnPrimaryText : C.textSub,
+                  border: `1px solid ${outputMode === "nest" ? C.btnPrimary : C.border}`,
+                }}>
+                ネスト形式
+              </button>
+              <button onClick={() => setOutputMode("pair")}
+                style={{
+                  padding: "3px 10px", borderRadius: 4, fontSize: 11, cursor: "pointer",
+                  background: outputMode === "pair" ? C.btnPrimary : C.bgBtn,
+                  color: outputMode === "pair" ? C.btnPrimaryText : C.textSub,
+                  border: `1px solid ${outputMode === "pair" ? C.btnPrimary : C.border}`,
+                }}>
+                ‡ペアID形式
+              </button>
+            </div>
             <button onClick={copyAll}
               style={{ background: "transparent", border: `1px solid ${C.border}`, color: C.textSub, padding: "3px 10px", borderRadius: 4, cursor: "pointer", fontSize: 11 }}>
               コピー
             </button>
           </div>
+          {outputMode === "pair" && pairErrors.length > 0 && (
+            <div style={{
+              marginBottom: 8, padding: "6px 10px", background: C.dangerBg,
+              border: `1px solid ${C.dangerBorder}`, borderRadius: 4, fontSize: 11, color: C.dangerText,
+            }}>
+              <div style={{ marginBottom: 2 }}>⚠ ペア整合性エラー（‡出力の正確性は保証されません）</div>
+              {pairErrors.map((err, i) => <div key={i}>・{err.pairKey}：{err.message}</div>)}
+            </div>
+          )}
           <pre style={{
             margin: 0, fontFamily: '"Consolas", "Menlo", "Monaco", monospace', fontSize: 11,
             lineHeight: 1.8, color: C.text, whiteSpace: "pre-wrap", wordBreak: "break-all",
           }}>
-            {results.map((r) => `${r.name}：${r.fullCode}`).join("\n")}
+            {outputMode === "pair" ? pairOutputText : results.map((r) => `${r.name}：${r.fullCode}`).join("\n")}
           </pre>
         </div>
       </div>
