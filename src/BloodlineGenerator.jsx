@@ -19,10 +19,19 @@ const initialCharacters = [
   { id: "16", name: "シンシア",        code: "J2", gender: "F",    father: "K2", mother: "O1", outsider: false, pairId: "08", pairRole: "F", deceased: false },
   { id: "17", name: "ナール",          code: "V1", gender: "M",    father: "",   mother: "",   outsider: true,  pairId: "09", pairRole: "M", deceased: false },
   { id: "18", name: "レフィル",        code: "O3", gender: "F",    father: "A1", mother: "D1", outsider: false, pairId: "09", pairRole: "F", deceased: false },
-  { id: "19", name: "ナハル",          code: "H1", gender: "M",    father: "V1", mother: "O3", outsider: false, pairId: "",   pairRole: "",  deceased: false },
-  { id: "20", name: "アシェラ",        code: "H2", gender: "F",    father: "V1", mother: "O3", outsider: false, pairId: "10", pairRole: "F", deceased: false },
-  { id: "21", name: "リリー",          code: "X1", gender: "F",    father: "",   mother: "",   outsider: true,  pairId: "98", pairRole: "F", deceased: false },
-  { id: "22", name: "ライラ",          code: "Z1", gender: "F",    father: "",   mother: "",   outsider: true,  pairId: "99", pairRole: "F", deceased: true },
+  { id: "19", name: "ナハル",          code: "H1", gender: "M",    father: "V1", mother: "O3", outsider: false, pairId: "10",   pairRole: "M",  deceased: false },
+  { id: "20", name: "アシェラ",        code: "H2", gender: "F",    father: "V1", mother: "O3", outsider: false, pairId: "11", pairRole: "F", deceased: false },
+  { id: "21", name: "カナン",          code: "H3", gender: "N",    father: "V1",   mother: "O3", outsider: false, pairId: "",   pairRole: "",  deceased: false },
+  { id: "22", name: "ウーシア",          code: "Y0", gender: "N",    father: "",   mother: "",  outsider: false, pairId: "",   pairRole: "",  deceased: false },
+  { id: "23", name: "ウィルマ",          code: "K11", gender: "F",    father: "D2",   mother: "K1", outsider: false, pairId: "10",   pairRole: "F",  deceased: false },
+  { id: "24", name: "レーク",          code: "I31", gender: "M",    father: "O2",   mother: "I3", outsider: false, pairId: "11",   pairRole: "M",  deceased: false },
+  { id: "25", name: "クラウス",          code: "A11", gender: "M",    father: "",   mother: "", outsider: true, pairId: "08",   pairRole: "M",  deceased: false },
+  { id: "26", name: "アルトゥール",          code: "J21", gender: "M",    father: "A11",   mother: "J2", outsider: false, pairId: "",   pairRole: "",  deceased: false },
+  { id: "27", name: "アマリア",          code: "J22", gender: "F",    father: "A11",   mother: "J2", outsider: false, pairId: "12",   pairRole: "F",  deceased: false },
+  { id: "28", name: "未定1",          code: "", gender: "N",    father: "",   mother: "", outsider: false, pairId: "",   pairRole: "",  deceased: false },
+  { id: "29", name: "未定2",          code: "", gender: "N",    father: "",   mother: "", outsider: false, pairId: "",   pairRole: "",  deceased: false },
+  { id: "98", name: "リリー",          code: "X1", gender: "F",    father: "",   mother: "", outsider: true, pairId: "",   pairRole: "",  deceased: false },
+  { id: "99", name: "ライラ",          code: "Z1", gender: "F",    father: "",   mother: "", outsider: true, pairId: "",   pairRole: "",  deceased: true },
 ];
 
 function findChar(code, characters) {
