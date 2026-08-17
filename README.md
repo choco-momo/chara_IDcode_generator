@@ -1,16 +1,108 @@
-# React + Vite
+# 血統コード・ジェネレーター（chara_IDcode_generator）
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+創作キャラクターの血統関係を、LLMが誤読しない1行テキストコードに自動変換する個人ツール。
 
-Currently, two official plugins are available:
+- 利用者: 作者1名（個人専用）
+- 状態: 仮組み・仕様検討中（2026-08時点）
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## これは何をするツールか
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+キャラの親子関係を登録すると、全系譜を織り込んだ血統コードを自動生成する。
 
-## Expanding the ESLint configuration
+```
+カロン：A1_F
+アシュリー：D1_M(A1B1)
+ミュリエル：I1_F(H1(C1D1(A1B1))+J1)
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 表記ルール（自作フォーマット）
+
+- `ID_性別(血統)` が基本形。血統は括弧内に再帰的に展開（括弧のネスト＝世代の深さ）
+- 括弧内は **母コードが先、父コードが後**
+- 外部者（婿・嫁入り等、血族外から来た者）のコードには `+` を前置
+- 血族同士はそのまま連結（`+` なし）
+
+例: `I1_F(H1(C1D1(A1B1))+J1)` → I1の母はH1（血族）、父はJ1（外部者）。H1の母はC1、父はD1。D1の母はA1、父はB1…と括弧を追うだけで全系譜が復元できる。
+
+### なぜこの表記を自作したのか（設計意図）
+
+**LLMに系譜を読ませるため。** 人間向けの家系図ツールは世にあるが、LLM向けのテキスト系譜フォーマットが見当たらなかった。
+
+- 家系図の**画像**をマルチモーダルで読ませると誤読リスクがある（線の交差、いとこ婚の合流を見落とす等）
+- JSONやGEDCOMは冗長で、深い世代を追うのにLLMが参照解決（IDを辿る作業）を強いられる
+- この表記は**1行に全血統が展開済み**なので、LLMは括弧を読むだけでよく、他の行を見に行く必要がない
+- 16人規模の相関一覧が約400文字に収まり、トークン効率がよい（日本語は名前部分だけ）
+- Claude Haiku 4.5 程度の小型モデルでも、軽い補足説明で構造を読み取れることを確認済み
+
+### なぜツール化したのか
+
+親を1人変更すると、その子・孫・曾孫…全員の括弧の中身が連鎖的に変わる。手動で書き直すのは間違えるし漏れるし、面倒で設定を試す気が失せる。ツールなら親のセレクトを変えた瞬間に下流が全部再計算される。
+
+---
+
+## 使い方（現状: 要ビルド）
+
+```
+npm install
+npm run dev
+```
+
+Node.js が必要。ブラウザで localhost が開く。
+
+### 主な機能
+
+- キャラの追加・編集・複製・並べ替え・削除（複数選択削除も可）
+- **一括読込**: キャラ名を1行1名で貼り付けて一括登録
+- 親（母・父）はセレクトボックスで指定。ID変更時は子の親参照も自動追従（カスケード更新）
+- 外部者フラグ、性別（M / F / N / N→F / N→M）
+- 検索、ID重複警告、循環参照検出
+- 全キャラ分をワンクリックでコピー（LLMのコンテキストに貼る用）
+
+---
+
+## なぜこの技術構成（React + Vite）なのか
+
+**作者が選んだのではなく、Claude のチャットにツール作成を頼んだ際のデフォルト出力が React だったため。**（Fable 5 より前のモデルで作成）
+
+チャットのアーティファクト上で動かす分には手軽だが、持ち出すとビルド工程（`npm install` → `npm run build`）がセットで付いてくる。作者は非エンジニアであり、この構成は改修のたびにビルドが必要で扱いにくい。
+
+### なぜ公開（Public）リポジトリなのか
+
+ビルドの手間を外部サービスに肩代わりさせるため。Publicであれば:
+
+- StackBlitz が GitHub から直接インポートしてブラウザ内でビルド・実行できる（動作確認に使用中）
+- GitHub Pages（無料プランは Public 必須）での自動ビルド配信が視野に入る
+
+つまり可視性の選択は内容の公開意図ではなく、**「手元でビルドしない」ためのインフラ都合**。
+
+### 今後の構想（未着工）
+
+**vanilla JS 単一HTML化**を検討中。同作者の FF14 潜水艦ステータス計算ツールで実績のある方式（React/Vite → HTML1枚・ビルド不要・ダブルクリックで動作）。実現すれば:
+
+- ビルド工程が消滅し、メモ帳で直せて、LLMにはファイル1枚渡すだけになる
+- Public である必要性も再検討可能になる（GitHubは単なる保管庫でよくなる）
+
+本ツールは移植適性が高い（ロジックは純粋関数で React 非依存・約50行、Tailwind 不使用、状態は実質 characters 配列1つ、通信・非同期なし）。
+
+---
+
+## 構成
+
+```
+src/
+├── BloodlineGenerator.jsx  # 本体（ロジック+UI 全部入り・約620行）
+├── App.jsx                 # エントリ（BloodlineGenerator を呼ぶだけ）
+├── main.jsx                # React 起動の定型文
+└── index.css               # リセットCSSのみ
+```
+
+心臓部は `BloodlineGenerator.jsx` 冒頭の3関数（`findChar` / `buildBloodline` / `generateFullCode`、計約50行）。React に依存しない純粋関数なので、単一HTML化の際はそのままコピーで動く。
+
+### 実装上の要点（将来の改修者・LLM向け）
+
+- **カスケード更新**: キャラのIDコードを変更すると、そのコードを親に持つ全キャラの father/mother も自動で書き換わる（`updateChar` 内）。ただし**旧コードが空文字のときはカスケードしない**（空の親参照を持つ全キャラが巻き込まれ循環参照が大量発生するため。実際に起きたバグの修正）
+- **循環と共通祖先の区別**: `buildParentPart` で `new Set(visited)` と複製してから再帰に渡しているため、いとこ婚など「父方と母方に共通の祖先がいる」ケースを循環参照と誤検出しない。**この複製を消してはいけない**
+- **IDコードの禁止文字**: `! @ # _ - ( ) + = [ ] { } < > " ' ` / \ $ % ^ & *` と空白類は入力時に自動除去。血統コードの構造文字（`_` `()` `+`）との衝突、および将来のJSON書き出し・ファイル名転用での事故を防ぐため。漢字・ひらがな・カタカナ・ハングル・ギリシャ文字等は許可
+- キャラの内部IDは `crypto.randomUUID()`。表示用のIDコード（A1等）とは別物
